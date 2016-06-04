@@ -1,0 +1,2 @@
+# 171AIProject
+A project for the Introduction to Aritifical intelligence class. I created an AI plugin for a Connect-4 (In truth, connect-X) game which could play against either human opponents or AI opponents when plugged into a game. The AI utilizes a depth-first search to look through possible game states in the current game. Using these possible gamestates, it evaluates each gamestate and maximizes the best possible move for us while minimizing the enemy's best move impact, assuming he runs the optimal path. 
