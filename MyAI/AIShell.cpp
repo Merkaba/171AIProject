@@ -5,9 +5,8 @@ Count how many win conditions I have satisfied.
 Adds opponents piece to every empty piece in the board. 
 Count how many win conditions he has satisfied. 
 
-My heuristic will be how valuable this world is to me 
-(my win condition number vs his win condition number) and I'll do IDFS placing pieces in positions and seeing what this
-similated world gets me for my heuristic.
+My heuristic will be how valuable this world is to me (my win condition number vs his win condition number) 
+and I'll do IDFS placing pieces in positions and seeing what this similated world gets me for my heuristic.
 Not sure if it's necessary to do branch pruning, so I've avoided it. Pruning can be done with a simple o(1) check if the 
 current player can place a piece anywhere in the board and win on the next turn, so this is the only pruning done.
 */
