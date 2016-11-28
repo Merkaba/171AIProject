@@ -1,20 +1,38 @@
+/*
+For connect K, I've implemented an Iterative DFS and for my heuristic, I've made a small function which: 
+Adds my piece to every empty piece in the board.
+Count how many win conditions I have satisfied.
+Adds opponents piece to every empty piece in the board. 
+Count how many win conditions he has satisfied. 
+
+My heuristic will be how valuable this world is to me 
+(my win condition number vs his win condition number) and I'll do IDFS placing pieces in positions and seeing what this
+similated world gets me for my heuristic.
+Not sure if it's necessary to do branch pruning, so I've avoided it. Pruning can be done with a simple o(1) check if the 
+current player can place a piece anywhere in the board and win on the next turn, so this is the only pruning done.
+*/
+
 #include "AIShell.h"
 #include <iostream>
 using namespace std;
 
+/*
+implements Depth First Search using gamestate. Accepts a gamestate and iteratively adds every possible move to that 
+gamestate, which is then passed recursively to the function DFS with +1 depth. Once it reaches the last depth (set 
+as 5 here), it will assign point values to the gamestates it has and cascades upwards until it returns to moveDFS. 
+moveDFS then picks out the best possible gamestate and returns that as a move.
+*/
 Move moveDFS(int ** gameState, int numCols, int numRows, int depth, int maxDepth, int currPlayer, int k)
 {
-	//std::pair<int, Move> returnValues;
 	Move move(NULL, NULL);
 	int h_type;
 	if (depth % 2 == 0)//get the max if even and min if odd
 		h_type = 1;//1 = max, -1 = min
 	else
 		h_type = 0;
-	int ** DFS_gameState = copyState(gameState, numCols, numRows);//copy of the state so i can edit it through the tree. don't need this i think
-																  //need to do something for the move
+	int ** DFS_gameState = copyState(gameState, numCols, numRows);//copy of the state so i can edit it through the tree
+																 
 	int bestScore;
-	//don't knwo if this player stuff is needed
 	int player;
 	if (depth % 2 == 0)
 	{
@@ -52,13 +70,10 @@ Move moveDFS(int ** gameState, int numCols, int numRows, int depth, int maxDepth
 
 int DFS(int ** gameState, int numCols, int numRows, int depth, int maxDepth, int currPlayer, int k)
 {
-	//std::pair<int, Move> returnValues;
 	Move move(NULL, NULL);
 	int h_type;
 	if (depth == maxDepth)
-		//int heuristic(int** gameState, int numCols, int numRows, int k
 		return heuristic(gameState, numCols, numRows, k, currPlayer);
-	//(std::pair<int, Move> (heuristic(gameState, numCols, numRows, k, currPlayer), moveReturn));
 	else
 	{
 		if (depth % 2 == 0)//get the max if even and min if odd
@@ -68,7 +83,6 @@ int DFS(int ** gameState, int numCols, int numRows, int depth, int maxDepth, int
 		int ** DFS_gameState = copyState(gameState, numCols, numRows);//copy of the state so i can edit it through the tree. don't need this i think
 																	  //need to do something for the move
 		int bestScore;
-		//don't knwo if this player stuff is needed
 		int player;
 		if (depth % 2 == 0)
 		{
@@ -106,7 +120,16 @@ int DFS(int ** gameState, int numCols, int numRows, int depth, int maxDepth, int
 	}
 }
 
+/*
+Heurustic determines how favorable a gamestate is by scoring how many rows, columns, or diagnals are 
+1 possible piece position away from winning, and then subtracting this from the opponents same score.
+It doesn't matter if these piece positions are possible to get yet.
 
+gameState denotes the 2dimensional current board.
+numCols and numRows denotes number of columns and rows, respectively.
+k denotes number of pieces needed to win.
+currPlayer is 1 for you, -1 for opponent.
+*/
 int heuristic(int** gameState, int numCols, int numRows, int k, int currPlayer) {
 	int playerScore = heuristicHelper(gameState, numCols, numRows, k, -1);
 	int adversaryScore = heuristicHelper(gameState, numCols, numRows, k, 1);
@@ -160,6 +183,10 @@ int** copyState(int** gameState, int numCols, int numRows) {
 	return result;
 }
 
+/*
+Checks for winning by locating streams of pieces using a vertical delta (-1, 0, or 1) and a
+horizontal delta (-1, 0, or 1).
+*/
 bool checkWin(int** gameState, int currPlayer, int colPos,
 	int rowPos, int k, int numRows, int numCols){
 	if(checkWinHelper(gameState, currPlayer, colPos, rowPos, k, numRows, numCols,
@@ -254,13 +281,3 @@ Move AIShell::makeMove(){
 
 
 
-/*
-for connect K,I was thinking of doing an IDFS and for my heuristic, I'll make a small function which: Adds my piece to 
-every empty piece in the board. Then count how many win conditions I have satisfied Adds opp piece to every empty piece 
-in the board. Then count how many win conditions he has satisfied. My heuristic will be how valuable this world is to me 
-(my win condition number vs his win condition number) and I'll do IDFS placing pieces in positions and seeing what this
-similated world gets me for my heuristic
-Not sure if it's necessary to do branch pruning
-Well pruning can be done with a simple o(1) check if he can place a piece anywhere in the board and win on the next turn, 
-and I'll prune this world from further IDFS
-*/
